@@ -1,0 +1,78 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 头部日期 -->
+  <view class="header">
+    <text class="date-text">{{currentDate}}</text>
+    
+    <!-- 用户信息显示（暂时隐藏，等后续添加头像昵称填写功能） -->
+    <!-- <view wx:if="{{isLoggedIn && userInfo}}" class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <text class="user-name">{{userInfo.nickName}}</text>
+    </view> -->
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载今日句子中...</text>
+  </view>
+
+  <!-- 句子卡片 -->
+  <view wx:else class="sentence-card card fade-in">
+    <view class="sentence-content">
+      <text class="english-text">{{sentence.content}}</text>
+      <text class="chinese-text">{{sentence.translation}}</text>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        class="play-btn {{isPlaying ? 'playing' : ''}}" 
+        bindtap="playAudio"
+        disabled="{{isPlaying}}"
+      >
+        <text class="icon">{{isPlaying ? '🔊' : '🔊'}}</text>
+        <text class="btn-text">{{isPlaying ? '正在播放...' : '朗读'}}</text>
+      </button>
+      
+      <!-- 收藏按钮 -->
+      <view 
+        class="collect-btn-simple {{isCollected ? 'collected' : ''}}" 
+        bindtap="toggleCollection"
+        wx:if="{{sentence}}"
+        data-action="collect"
+      >
+        <text class="icon">{{isCollected ? '❤️' : '🤍'}}</text>
+        <text class="btn-text">{{isCollected ? '已收藏' : '收藏'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 重点词汇 -->
+  <view wx:if="{{!loading && sentence.keywords}}" class="keywords-section card fade-in">
+    <view class="section-title">
+      <text class="title-text">重点词汇</text>
+    </view>
+    
+    <view class="keywords-list">
+      <view 
+        wx:for="{{sentence.keywords}}" 
+        wx:key="word" 
+        class="keyword-item"
+      >
+        <view class="word-header">
+          <text class="word">{{item.word}}</text>
+          <text class="phonetic">{{item.phonetic}}</text>
+          <text class="part-of-speech">{{item.partOfSpeech}}</text>
+        </view>
+        <text class="meaning">{{item.meaning}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text class="tip-text">每天一句英语，坚持就是进步 💪</text>
+    <text class="play-tip">💡 点击朗读按钮播放英语发音</text>
+  </view>
+</view>

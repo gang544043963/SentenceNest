@@ -1,0 +1,112 @@
+<!--pages/detail/detail.wxml-->
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar">
+    <view class="navbar-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+      <text class="back-text">返回</text>
+    </view>
+    
+    <view class="navbar-center">
+      <text class="navbar-title">句子详情</text>
+    </view>
+    
+    <view class="navbar-right">
+      <button 
+        class="collect-nav-btn {{isCollected ? 'collected' : ''}}" 
+        bindtap="toggleCollection"
+        wx:if="{{!loading}}"
+      >
+        <text class="collect-icon">{{isCollected ? '❤️' : '🤍'}}</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载详情中...</text>
+  </view>
+
+  <!-- 句子详情 -->
+  <view wx:else class="detail-content">
+    <!-- 句子卡片 -->
+    <view class="sentence-detail-card card fade-in">
+      <view class="sentence-content">
+        <text class="english-text">{{sentence.content}}</text>
+        <text class="chinese-text">{{sentence.translation}}</text>
+      </view>
+      
+      <!-- 朗读按钮 -->
+      <view class="play-section">
+        <button 
+          class="play-detail-btn {{isPlaying ? 'playing' : ''}}" 
+          bindtap="playAudio"
+          disabled="{{isPlaying}}"
+        >
+          <text class="play-icon">{{isPlaying ? '🔊' : '🔊'}}</text>
+          <text class="play-text">{{isPlaying ? '正在播放...' : '点击朗读'}}</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 重点词汇详情 -->
+    <view wx:if="{{sentence.keywords}}" class="keywords-detail-section card fade-in">
+      <view class="section-header">
+        <text class="section-title">重点词汇解析</text>
+        <text class="keywords-count">共 {{sentence.keywords.length}} 个</text>
+      </view>
+      
+      <view class="keywords-detail-list">
+        <view 
+          wx:for="{{sentence.keywords}}" 
+          wx:key="word" 
+          class="keyword-detail-item"
+        >
+          <view class="keyword-header">
+            <view class="word-info">
+              <text class="word-main">{{item.word}}</text>
+              <text class="word-phonetic">{{item.phonetic}}</text>
+            </view>
+            <view class="word-pos">
+              <text class="pos-tag">{{item.partOfSpeech}}</text>
+            </view>
+          </view>
+          
+          <view class="word-meaning">
+            <text class="meaning-text">{{item.meaning}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 句子信息 -->
+    <view class="sentence-info card fade-in">
+      <view class="info-header">
+        <text class="info-title">句子信息</text>
+      </view>
+      
+      <view class="info-list">
+        <view class="info-item">
+          <text class="info-label">日期</text>
+          <text class="info-value">{{sentence.date || '今日'}}</text>
+        </view>
+        
+        <view class="info-item" wx:if="{{sentence.collectedAt}}">
+          <text class="info-label">收藏时间</text>
+          <text class="info-value">{{sentence.collectedAt.split('T')[0]}}</text>
+        </view>
+        
+        <view class="info-item">
+          <text class="info-label">词汇数量</text>
+          <text class="info-value">{{sentence.keywords ? sentence.keywords.length : 0}} 个重点词汇</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作提示 -->
+    <view class="action-tips">
+      <text class="tip-text">💡 每天坚持学习一句英语，积少成多</text>
+    </view>
+  </view>
+</view>

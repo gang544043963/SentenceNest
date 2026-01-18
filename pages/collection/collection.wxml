@@ -1,0 +1,98 @@
+<!--pages/collection/collection.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-prompt">
+    <view class="login-icon">🔐</view>
+    <text class="login-title">需要登录</text>
+    <text class="login-desc">登录后可以查看和管理你的收藏</text>
+    <view class="login-btn" bindtap="userLogin">
+      <text>立即登录</text>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else>
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <view class="search-input-wrapper">
+        <input 
+          class="search-input" 
+          placeholder="搜索收藏的句子..."
+          value="{{searchValue}}"
+          bindinput="onSearchInput"
+          confirm-type="search"
+        />
+        <view wx:if="{{searchValue}}" class="clear-btn" bindtap="clearSearch">
+          <text class="clear-icon">×</text>
+        </view>
+        <view class="search-icon">🔍</view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading-container">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载收藏中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{isEmpty}}" class="empty-container">
+      <view class="empty-icon">📚</view>
+      <text class="empty-title">还没有收藏</text>
+      <text class="empty-desc">去首页收藏你喜欢的句子吧</text>
+      <navigator url="/pages/index/index" class="goto-home-btn">
+        <text>去收藏</text>
+      </navigator>
+    </view>
+
+    <!-- 收藏列表 -->
+    <view wx:else class="collection-list">
+      <view wx:if="{{filteredCollections.length === 0 && searchValue}}" class="no-results">
+        <text class="no-results-text">没有找到相关收藏</text>
+      </view>
+      
+      <view wx:else>
+        <view 
+          wx:for="{{filteredCollections}}" 
+          wx:key="_id" 
+          class="collection-item card fade-in"
+        >
+          <view 
+            class="item-content"
+            bindtap="onItemTap"
+            data-index="{{index}}"
+          >
+            <view class="sentence-preview">
+              <text class="english-preview">{{item.sentence.content || item.content}}</text>
+              <text class="chinese-preview">{{item.sentence.translation || item.translation}}</text>
+            </view>
+            
+            <view class="item-meta">
+              <text class="collect-date">收藏于 {{item.collectedAt ? item.collectedAt.split('T')[0] : item.createTime.split('T')[0]}}</text>
+            </view>
+          </view>
+          
+          <view class="item-actions">
+            <view 
+              class="delete-btn" 
+              bindtap="deleteItem" 
+              data-index="{{index}}"
+            >
+              <text class="delete-icon">🗑️</text>
+            </view>
+          </view>
+          
+          <view class="item-arrow" bindtap="onItemTap" data-index="{{index}}">
+            <text class="arrow-icon">›</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
+    <view wx:if="{{!loading && !isEmpty}}" class="stats-footer">
+      <text class="stats-text">共收藏了 {{collections.length}} 条句子</text>
+      <text class="refresh-hint">💡 下拉可以刷新数据</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/collection/collection",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4A90E2",
+    "navigationBarTitleText": "Daily Sentence",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F8F9FA"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#4A90E2",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今日句子"
+      },
+      {
+        "pagePath": "pages/collection/collection",
+        "text": "我的收藏"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
